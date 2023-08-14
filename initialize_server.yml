@@ -1,0 +1,25 @@
+---
+
+- hosts: all
+  tasks:
+  - name: install basic packages
+    package:
+      name:
+        - git
+        - curl
+        - neofetch
+      state: latest
+      update_cache: yes
+  roles:
+    - role: tomereli.oh_my_zsh_p10k
+      vars:
+        users:
+          - username: root
+        oh_my_zsh_plugins:
+          - git
+          - zsh-autosuggestions
+          - zsh-syntax-highlighting
+          - z
+        zshrc_src_template: rash.zshrc
+        p10k_src_file: rash.p10k.zsh
+
