@@ -1,0 +1,8 @@
+---
+
+- hosts: all
+  tasks:
+  - name: update cache
+    apt:
+      update_cache: yes
+      upgrade: "full"

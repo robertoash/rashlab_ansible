@@ -3,13 +3,14 @@
 - hosts: all
   tasks:
   - name: install basic packages
-    package:
+    apt:
       name:
         - git
         - curl
         - neofetch
       state: latest
       update_cache: yes
+      upgrade: "full"
   roles:
     - role: tomereli.oh_my_zsh_p10k
       vars:
