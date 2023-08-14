@@ -1,8 +1,0 @@
----
-
-- hosts: all
-  vars:
-    directory: /home
-  tasks:
-  - name: Removing home directory
-    ansible.builtin.command: rm -r {{ directory }}
