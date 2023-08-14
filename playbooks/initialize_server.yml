@@ -1,17 +1,33 @@
 ---
 
 - hosts: all
+  pre_tasks:
+    - name: Oh-my-zsh exists
+      shell: "ls {{ ansible_env.HOME }}/.oh-my-zsh/oh-my-zsh.sh"
+      register: omz_exists
+      ignore_errors: true
   tasks:
   - name: install basic packages
     apt:
       name:
         - git
         - curl
+        - locate
         - neofetch
       state: latest
-      update_cache: yes
+      update_cache: true
+  - name: Update database to populate locate command
+    ansible.builtin.command: updatedb
   roles:
+    - role: roles/install_meslo_fonts
+      vars:
+        meslo_fonts:
+          - MesloLGS%20NF%20Regular.ttf
+          - MesloLGS%20NF%20Bold.ttf
+          - MesloLGS%20NF%20Italic.ttf
+          - MesloLGS%20NF%20Bold%20Italic.ttf
     - role: roles/submodules/tomereli.oh_my_zsh_p10k
+      when: omz_exists is failed
       vars:
         users:
           - username: root
