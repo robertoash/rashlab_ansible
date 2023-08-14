@@ -10,7 +10,6 @@
         - neofetch
       state: latest
       update_cache: yes
-      upgrade: "full"
   roles:
     - role: tomereli.oh_my_zsh_p10k
       vars:
@@ -21,6 +20,6 @@
           - zsh-autosuggestions
           - zsh-syntax-highlighting
           - z
-        zshrc_src_template: rash.zshrc
-        p10k_src_file: rash.p10k.zsh
+        zshrc_src_template: ../resources/rash.zshrc
+        p10k_src_file: ../resources/rash.p10k.zsh
 
