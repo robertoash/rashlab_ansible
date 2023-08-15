@@ -3,6 +3,7 @@
 - hosts: all
   gather_facts: true
   become: false
+  user: rash
   tasks:
   - block: # Install initial packages
     - name: Installing basic packages
@@ -12,64 +13,5 @@
           - git
           - curl
           - wget
-          - zsh
-          - exa
         state: latest
         update_cache: true
-  - block: # Create .zshrc if not exists
-    - name: Create .zshrc if not exists
-      ansible.builtin.file:
-        path: "{{ ansible_env.HOME }}/.zshrc"
-        state: touch
-  - block: # Change default shell to zsh
-    - name: Change default shell to zsh
-      become: true
-      ansible.builtin.user:
-        name: "{{ ansible_user_id }}"
-        shell: /usr/bin/zsh
-  - block: # Configure exa
-    - name: Add exa base alias to .zshrc
-      ansible.builtin.lineinfile:
-        path: "{{ ansible_env.HOME }}/.zshrc"
-        line: 'alias ll="exa --color always --icons -aFH --group-directories-first -1"'
-        state: present
-    - name: Add exa long alias to .zshrc
-      ansible.builtin.lineinfile:
-        path: "{{ ansible_env.HOME }}/.zshrc"
-        line: 'alias lll="ll -l --header"'
-        state: present
-  - block: # Install and configure starship
-    - name: Get starship install script (save as /tmp/install_starship.sh)
-      ansible.builtin.get_url:
-        url: https://starship.rs/install.sh
-        dest: /tmp/install_starship.sh
-        mode: 0755
-    - name: Run starship install script
-      become: true
-      ansible.builtin.shell: sh /tmp/install_starship.sh -y
-    - name: Add starship to .zshrc
-      ansible.builtin.lineinfile:
-        path: "{{ ansible_env.HOME }}/.zshrc"
-        line: 'eval "$(starship init zsh)"'
-        state: present
-    - block:
-      - name: Create .config directory if not exists
-        ansible.builtin.file:
-          path: "{{ ansible_env.HOME }}/.config"
-          state: directory
-      - name: Create starship.toml if not exists
-        ansible.builtin.file:
-          path: "{{ ansible_env.HOME }}/.config/starship.toml"
-          state: touch
-      - name: Add bracketed segments to starship
-        ansible.builtin.command: starship preset bracketed-segments -o ~/.config/starship.toml
-  - block: # Install z
-    - name: Asserting z directory exists
-      ansible.builtin.file:
-        path: "{{ ansible_env.HOME }}/.z"
-        state: directory
-    - name: Download  z
-      ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/rupa/z/master/z.sh
-        dest: "{{ ansible_env.HOME }}/.z/z.sh"
-        mode: 0755
