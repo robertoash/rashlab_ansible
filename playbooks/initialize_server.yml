@@ -16,6 +16,11 @@
           - exa
         state: latest
         update_cache: true
+  - block: # Create .zshrc if not exists
+    - name: Create .zshrc if not exists
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.zshrc"
+        state: touch
   - block: # Change default shell to zsh
     - name: Change default shell to zsh
       become: true
@@ -42,10 +47,6 @@
     - name: Run starship install script
       become: true
       ansible.builtin.shell: sh /tmp/install_starship.sh -y
-    - name: Create .zshrc if not exists
-      ansible.builtin.file:
-        path: "{{ ansible_env.HOME }}/.zshrc"
-        state: touch
     - name: Add starship to .zshrc
       ansible.builtin.lineinfile:
         path: "{{ ansible_env.HOME }}/.zshrc"
